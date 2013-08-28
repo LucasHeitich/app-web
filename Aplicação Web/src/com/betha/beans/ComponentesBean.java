@@ -9,9 +9,15 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
+
 import com.betha.business.Pessoa;
 import com.betha.business.PessoaComparator;
 import com.betha.daos.PessoaDAO;
+
+import com.betha.util.FabricaSessao;
 import com.betha.util.FacesUtil;
 
 @ManagedBean
@@ -104,20 +110,30 @@ public class ComponentesBean {
 			System.out.println(selecionados.get(i).getNome());
 		}
 	}
-
+/*
 	public void marcarTodos() {
 		for (int i = 0; i < this.lista.size(); i++) {
 			this.lista.get(i).setSelecionado(this.checkboxSelecionado);
 		}
 	}
-
+*/
 	public void sort() {
+		Session session = FabricaSessao.abrirSessao();
 		this.setSorted(true);
 		this.setAsc(!this.asc);
 		if (this.filtro != null && this.filtro.length() > 0) {
-			Collections.sort(this.filtrados, new PessoaComparator(this.asc));
+			
+			if(this.asc){
+				this.filtrados = session.createCriteria(Pessoa.class).addOrder(Order.asc("nome")).list();
+			}else{
+				this.filtrados = session.createCriteria(Pessoa.class).addOrder(Order.desc("nome")).list();
+			}
 		} else {
-			Collections.sort(this.lista, new PessoaComparator(this.asc));
+			if(this.asc){
+				this.lista = session.createCriteria(Pessoa.class).addOrder(Order.asc("nome")).list();
+			}else{
+				this.lista = session.createCriteria(Pessoa.class).addOrder(Order.desc("nome")).list();
+			}
 		}
 	}
 
@@ -130,17 +146,33 @@ public class ComponentesBean {
 			}
 		}
 	}
-	public void editar(Pessoa pessoa)
-	{
+	public void editar(Pessoa pessoa){
+		
+		Session session = FabricaSessao.abrirSessao();
 		if(this.pessoaSelecionada == null || this.pessoaSelecionada != pessoa){
+			
 			this.pessoaSelecionada = pessoa;
+			System.out.println(pessoaSelecionada.getNome());
+			
+			
 		}else{
+			
+			this.lista.get(pessoaSelecionada.getCodigo()-1).setNome(this.pessoaSelecionada.getNome());
+			Transaction t = session.beginTransaction();
+			session.merge(pessoa);
+			t.commit();
+		
+			
 			this.pessoaSelecionada = null;
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Cadastro salvo com sucesso!", ""));
 		}
 	}
 	public void excluir(Pessoa pessoa){
+		Session session = FabricaSessao.abrirSessao();
+		Transaction t = session.beginTransaction();
+		session.delete(pessoa);
+		t.commit();
 		this.lista.remove(pessoa);
 		
 		FacesContext.getCurrentInstance().addMessage(null,

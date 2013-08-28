@@ -25,16 +25,7 @@
 			<h:dataTable id="relatorio"
 				value="#{not empty componentesBean.filtro?componentesBean.filtrados:componentesBean.lista}"
 				var="item" rendered="#{not empty componentesBean.lista}">
-				<h:column headerClass="check-column">
-					<f:facet name="header">
-						<h:selectBooleanCheckbox id="checkAll"
-							value="#{componentesBean.checkboxSelecionado}">
-							<f:ajax event="click" listener="#{componentesBean.marcarTodos}"
-								render="relatorio" />
-						</h:selectBooleanCheckbox>
-					</f:facet>
-					<h:selectBooleanCheckbox value="#{item.selecionado}" />
-				</h:column>
+				
 				<h:column headerClass="codigo-column">
 					<f:facet name="header">Código</f:facet>
 					<h:outputText value="#{item.codigo}" />
@@ -50,6 +41,11 @@
 					</f:facet>
 					<h:outputText value="#{item.nome}" rendered="#{not(componentesBean.pessoaSelecionada eq item)}" />
 					<h:inputText styleClass="input-text" value="#{item.nome}" rendered="#{componentesBean.pessoaSelecionada eq item}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">Telefone</f:facet>
+					<h:outputText value="#{item.telefone}" rendered="#{not(componentesBean.pessoaSelecionada eq item)}" />
+					<h:inputText styleClass="input-text" value="#{item.telefone}" rendered="#{componentesBean.pessoaSelecionada eq item}" />
 				</h:column>
 				<h:column>
 					<f:facet name="header">Endereço</f:facet>

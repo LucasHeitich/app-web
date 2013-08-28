@@ -1,16 +1,37 @@
 package com.betha.business;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="usuarios")
 public class Pessoa {
-	private boolean selecionado;
+	
 	private Integer codigo;
 	private String nome;
-	private String endereco;
 	private String telefone;
+	private String endereco;
 	
-	public Pessoa(Integer codigo, String nome, String endereco, String telefone) {
+	public Pessoa(){
+		
+	}
+	public Pessoa(Integer codigo, String nome, String telefone, String endereco) {
 		this.codigo = codigo;
 		this.nome = nome;
-		this.endereco = endereco;
+		this.telefone = telefone;
+	}
+	public Pessoa(String nome, String telefone, String endereco) {
+		this.codigo = codigo;
+		this.nome = nome;
+		this.telefone = telefone;
+		this.endereco=endereco;
+	}
+	
+	public Pessoa( String nome, String telefone) {
+		this.codigo = codigo;
+		this.nome = nome;
 		this.telefone = telefone;
 	}
 	
@@ -20,19 +41,15 @@ public class Pessoa {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public String getEndereco() {
-		return endereco;
-	}
-	public void setEndereco(String endereco) {
-		this.endereco = endereco;
-	}
+
 	public String getTelefone() {
 		return telefone;
 	}
 	public void setTelefone(String telefone) {
 		this.telefone = telefone;
 	}
-
+	@Id
+	@GeneratedValue
 	public Integer getCodigo() {
 		return codigo;
 	}
@@ -41,12 +58,12 @@ public class Pessoa {
 		this.codigo = codigo;
 	}
 
-	public boolean isSelecionado() {
-		return selecionado;
+	public String getEndereco() {
+		return endereco;
 	}
 
-	public void setSelecionado(boolean selecionado) {
-		this.selecionado = selecionado;
+	public void setEndereco(String endereco) {
+		this.endereco = endereco;
 	}
 	
 	
